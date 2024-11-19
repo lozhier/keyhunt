@@ -710,7 +710,6 @@ int main(int argc, char **argv)	{
 					}
 				}
 			break;
-			
 			case 's':
 				OUTPUTSECONDS.SetBase10(optarg);
 				if(OUTPUTSECONDS.IsLower(&ZERO))	{
