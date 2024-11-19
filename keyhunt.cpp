@@ -675,7 +675,7 @@ int main(int argc, char **argv)	{
 				FLAGRANDOM = 1;
 				FLAGBSGSMODE =  3;
 			break;
-		/*	case 'r':
+			case 'r':
 				if(optarg != NULL)	{
 					stringtokenizer(optarg,&t);
 					switch(t.n)	{
@@ -709,85 +709,7 @@ int main(int argc, char **argv)	{
 						break;
 					}
 				}
-			break; */
-			
-// Variável global para armazenar o range_start
-char range_start[9] = {0};  // 8 caracteres + 1 para o '\0' terminador de string
-
-// Função de randomização
-void *randomizeRangeStart(void *arg) {
-    while (1) {
-        // Inicializa a semente do número aleatório uma única vez
-        srand((unsigned int)time(0));
-
-        // Randomiza os primeiros 8 caracteres de range_start
-        for (int i = 0; i < 8; i++) {
-            range_start[i] = "0123456789abcdef"[rand() % 16];
-        }
-
-        printf("Novo range_start randomizado: %s\n", range_start);
-
-        // Aguarda 20 segundos
-#ifdef _WIN32
-        Sleep(20000); // 20 segundos no Windows
-#else
-        sleep(20); // 20 segundos no Unix/Linux
-#endif
-    }
-    return NULL;
-}
-
-int main() {
-    // Criando a thread para randomizar range_start
-    pthread_t randomizeThread;
-    pthread_create(&randomizeThread, NULL, randomizeRangeStart, NULL);
-
-    // Fluxo principal do código com o case 'r'
-    char *optarg = "your_arg_here";  // Exemplo, você deve obter esse valor de onde ele é necessário
-    struct Tokenizer t;  // Supondo que você tenha uma estrutura de Tokenizer implementada
-
-    // Simulando o fluxo de execução do case 'r'
-    switch('r') {  // Substitua por seu código real
-        case 'r':
-            if(optarg != NULL) {
-                stringtokenizer(optarg, &t);
-                switch(t.n) {
-                    case 1:
-                        range_start = nextToken(&t);
-                        if (isValidHex(range_start)) {
-                            FLAGRANGE = 1;
-                            range_end = secp->order.GetBase16();
-                        } else {
-                            fprintf(stderr, "[E] Invalid hexstring : %s.\n", range_start);
-                        }
-                        break;
-                    case 2:
-                        range_start = nextToken(&t);
-                        range_end = nextToken(&t);
-                        if (isValidHex(range_start) && isValidHex(range_end)) {
-                            FLAGRANGE = 1;
-                        } else {
-                            if (isValidHex(range_start)) {
-                                fprintf(stderr, "[E] Invalid hexstring : %s\n", range_start);
-                            } else {
-                                fprintf(stderr, "[E] Invalid hexstring : %s\n", range_end);
-                            }
-                        }
-                        break;
-                    default:
-                        printf("[E] Unknown number of Range Params: %i\n", t.n);
-                        break;
-                }
-            }
-            break;
-    }
-
-    // Espera a thread finalizar (se necessário, embora no caso de randomização contínua a thread nunca pare)
-    pthread_join(randomizeThread, NULL);
-
-    return 0;
-}
-
+			break;
 			case 's':
 				OUTPUTSECONDS.SetBase10(optarg);
 				if(OUTPUTSECONDS.IsLower(&ZERO))	{
