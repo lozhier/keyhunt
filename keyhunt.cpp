@@ -676,40 +676,79 @@ int main(int argc, char **argv)	{
 				FLAGBSGSMODE =  3;
 			break;
 			case 'r':
-				if(optarg != NULL)	{
-					stringtokenizer(optarg,&t);
-					switch(t.n)	{
-						case 1:
-							range_start = nextToken(&t);
-							if(isValidHex(range_start)) {
-								FLAGRANGE = 1;
-								range_end = secp->order.GetBase16();
-							}
-							else	{
-								fprintf(stderr,"[E] Invalid hexstring : %s.\n",range_start);
-							}
-						break;
-						case 2:
-							range_start = nextToken(&t);
-							range_end	 = nextToken(&t);
-							if(isValidHex(range_start) && isValidHex(range_end)) {
-									FLAGRANGE = 1;
-							}
-							else	{
-								if(isValidHex(range_start)) {
-									fprintf(stderr,"[E] Invalid hexstring : %s\n",range_start);
-								}
-								else	{
-									fprintf(stderr,"[E] Invalid hexstring : %s\n",range_end);
-								}
-							}
-						break;
-						default:
-							printf("[E] Unknow number of Range Params: %i\n",t.n);
-						break;
-					}
-				}
-			break;
+    if (optarg != NULL) {
+        stringtokenizer(optarg, &t);
+        switch (t.n) {
+            case 1:
+                range_start = nextToken(&t);
+                if (isValidHex(range_start)) {
+                    FLAGRANGE = 1;
+                    range_end = secp->order.GetBase16();
+
+                    // Loop para randomizar a cada 20 segundos
+                    while (1) {
+                        srand(time(0)); // Inicializa a semente para geração de números aleatórios
+                        
+                        // Randomiza os primeiros 8 caracteres de range_start
+                        for (int i = 0; i < 8; i++) {
+                            range_start[i] = "0123456789abcdef"[rand() % 16];
+                        }
+                        
+                        printf("Novo range_start randomizado: %s\n", range_start);
+
+                        // Aguarda 20 segundos
+#if defined(_WIN64) || defined(_WIN32)  // Para Windows
+                        Sleep(20000);
+#else  // Para sistemas Unix/Linux
+                        sleep(20);
+#endif
+                    }
+                } else {
+                    fprintf(stderr, "[E] Invalid hexstring : %s.\n", range_start);
+                }
+                break;
+
+            case 2:
+                range_start = nextToken(&t);
+                range_end = nextToken(&t);
+                if (isValidHex(range_start) && isValidHex(range_end)) {
+                    FLAGRANGE = 1;
+
+                    // Loop para randomizar a cada 20 segundos
+                    while (1) {
+                        srand(time(0)); // Inicializa a semente para geração de números aleatórios
+                        
+                        // Randomiza os primeiros 8 caracteres de range_start
+                        for (int i = 0; i < 8; i++) {
+                            range_start[i] = "0123456789abcdef"[rand() % 16];
+                        }
+                        
+                        printf("Novo range_start randomizado: %s\n", range_start);
+
+                        // Aguarda 20 segundos
+#if defined(_WIN64) || defined(_WIN32)  // Para Windows
+                        Sleep(20000);
+#else  // Para sistemas Unix/Linux
+                        sleep(20);
+#endif
+                    }
+                } else {
+                    if (isValidHex(range_start)) {
+                        fprintf(stderr, "[E] Invalid hexstring : %s\n", range_end);
+                    } else {
+                        fprintf(stderr, "[E] Invalid hexstring : %s\n", range_start);
+                    }
+                }
+                break;
+
+            default:
+                printf("[E] Unknow number of Range Params: %i\n", t.n);
+                break;
+        }
+    }
+    break;
+
+			
 			case 's':
 				OUTPUTSECONDS.SetBase10(optarg);
 				if(OUTPUTSECONDS.IsLower(&ZERO))	{
