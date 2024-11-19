@@ -685,21 +685,28 @@ int main(int argc, char **argv)	{
                     FLAGRANGE = 1;
                     range_end = secp->order.GetBase16();
 
+                    // Aguarda 20 segundos antes de iniciar a randomização
+#if defined(_WIN64) || defined(_WIN32)  // Para Windows
+                    Sleep(20000);
+#else  // Para sistemas Unix/Linux
+                    sleep(20);
+#endif
+
                     // Loop para randomizar a cada 20 segundos
                     while (1) {
                         srand(time(0)); // Inicializa a semente para geração de números aleatórios
-                        
+
                         // Randomiza os primeiros 8 caracteres de range_start
                         for (int i = 0; i < 8; i++) {
                             range_start[i] = "0123456789abcdef"[rand() % 16];
                         }
-                        
+
                         printf("Novo range_start randomizado: %s\n", range_start);
 
-                        // Aguarda 20 segundos
-#if defined(_WIN64) || defined(_WIN32)  // Para Windows
+                        // Aguarda 20 segundos antes de randomizar novamente
+#if defined(_WIN64) || defined(_WIN32)
                         Sleep(20000);
-#else  // Para sistemas Unix/Linux
+#else
                         sleep(20);
 #endif
                     }
@@ -714,21 +721,28 @@ int main(int argc, char **argv)	{
                 if (isValidHex(range_start) && isValidHex(range_end)) {
                     FLAGRANGE = 1;
 
+                    // Aguarda 20 segundos antes de iniciar a randomização
+#if defined(_WIN64) || defined(_WIN32)
+                    Sleep(20000);
+#else
+                    sleep(20);
+#endif
+
                     // Loop para randomizar a cada 20 segundos
                     while (1) {
                         srand(time(0)); // Inicializa a semente para geração de números aleatórios
-                        
+
                         // Randomiza os primeiros 8 caracteres de range_start
                         for (int i = 0; i < 8; i++) {
                             range_start[i] = "0123456789abcdef"[rand() % 16];
                         }
-                        
+
                         printf("Novo range_start randomizado: %s\n", range_start);
 
-                        // Aguarda 20 segundos
-#if defined(_WIN64) || defined(_WIN32)  // Para Windows
+                        // Aguarda 20 segundos antes de randomizar novamente
+#if defined(_WIN64) || defined(_WIN32)
                         Sleep(20000);
-#else  // Para sistemas Unix/Linux
+#else
                         sleep(20);
 #endif
                     }
@@ -742,11 +756,13 @@ int main(int argc, char **argv)	{
                 break;
 
             default:
-                printf("[E] Unknow number of Range Params: %i\n", t.n);
+                printf("[E] Unknown number of Range Params: %i\n", t.n);
                 break;
         }
     }
     break;
+
+	
 
 			
 			case 's':
