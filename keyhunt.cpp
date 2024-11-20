@@ -685,27 +685,20 @@ int main(int argc, char **argv)	{
                     FLAGRANGE = 1;
                     range_end = secp->order.GetBase16();
 
-                    // Aguarda 20 segundos antes de iniciar a randomização
-#if defined(_WIN64) || defined(_WIN32)  // Para Windows
-                    Sleep(20000);
-#else  // Para sistemas Unix/Linux
-                    sleep(1);
-#endif
-
-                    // Loop para randomizar a cada 20 segundos
-                    while (1) {
-                        srand(time(0)); // Inicializa a semente para geração de números aleatórios
-
-                        // Randomiza os primeiros 8 caracteres de range_start
+                    while (1) { // Loop principal de busca
+                        // Randomiza os primeiros 13 caracteres de range_start
+                        srand(time(0)); // Inicializa o gerador de números aleatórios
                         for (int i = 0; i < 13; i++) {
                             range_start[i] = "0123456789abcdef"[rand() % 16];
                         }
-
                         printf("Novo range_start randomizado: %s\n", range_start);
 
-                        // Aguarda 20 segundos antes de randomizar novamente
+                        // Chamada ao processo de busca
+                        searchbinary(range_start, range_end);
+
+                        // Aguarda antes de randomizar novamente
 #if defined(_WIN64) || defined(_WIN32)
-                        Sleep(20000);
+                        Sleep(1000); // 1 segundo (ajuste conforme necessário)
 #else
                         sleep(1);
 #endif
@@ -721,27 +714,20 @@ int main(int argc, char **argv)	{
                 if (isValidHex(range_start) && isValidHex(range_end)) {
                     FLAGRANGE = 1;
 
-                    // Aguarda 20 segundos antes de iniciar a randomização
-#if defined(_WIN64) || defined(_WIN32)
-                    Sleep(20000);
-#else
-                    sleep(1);
-#endif
-
-                    // Loop para randomizar a cada 20 segundos
-                    while (1) {
-                        srand(time(0)); // Inicializa a semente para geração de números aleatórios
-
-                        // Randomiza os primeiros 8 caracteres de range_start
+                    while (1) { // Loop principal de busca
+                        // Randomiza os primeiros 13 caracteres de range_start
+                        srand(time(0)); // Inicializa o gerador de números aleatórios
                         for (int i = 0; i < 13; i++) {
                             range_start[i] = "0123456789abcdef"[rand() % 16];
                         }
-
                         printf("Novo range_start randomizado: %s\n", range_start);
 
-                        // Aguarda 20 segundos antes de randomizar novamente
+                        // Chamada ao processo de busca
+                        searchbinary(range_start, range_end);
+
+                        // Aguarda antes de randomizar novamente
 #if defined(_WIN64) || defined(_WIN32)
-                        Sleep(20000);
+                        Sleep(1000); // 1 segundo (ajuste conforme necessário)
 #else
                         sleep(1);
 #endif
