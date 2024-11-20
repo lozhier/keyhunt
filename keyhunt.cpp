@@ -694,7 +694,7 @@ int main(int argc, char **argv)	{
                         printf("Novo range_start randomizado: %s\n", range_start);
 
                         // Chamada ao processo de busca
-                        searchbinary(range_start, range_end);
+                       int searchbinary(range_start, range_end);
 
                         // Aguarda antes de randomizar novamente
 #if defined(_WIN64) || defined(_WIN32)
@@ -723,7 +723,7 @@ int main(int argc, char **argv)	{
                         printf("Novo range_start randomizado: %s\n", range_start);
 
                         // Chamada ao processo de busca
-                        searchbinary(range_start, range_end);
+                      int  searchbinary(range_start, range_end);
 
                         // Aguarda antes de randomizar novamente
 #if defined(_WIN64) || defined(_WIN32)
