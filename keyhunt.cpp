@@ -675,83 +675,94 @@ int main(int argc, char **argv)	{
 				FLAGRANDOM = 1;
 				FLAGBSGSMODE =  3;
 			break;
-			
-// Função para randomizar os 12 primeiros caracteres de range_start
-void *randomizeRangeStart(void *arg) {
-    while (1) {
-        pthread_mutex_lock(&lock);  // Bloqueia acesso à variável
-        for (int i = 0; i < 12; i++) {
-            range_start[i] = "0123456789abcdef"[rand() % 16];
-        }
-        range_start[12] = '\0';  // Finaliza a string
-        printf("[INFO] Novo range_start: %s\n", range_start);
-        pthread_mutex_unlock(&lock);  // Libera o bloqueio
+			case 'r':
+    if (optarg != NULL) {
+        stringtokenizer(optarg, &t);
+        switch (t.n) {
+            case 1:
+                range_start = nextToken(&t);
+                if (isValidHex(range_start)) {
+                    FLAGRANGE = 1;
+                    range_end = secp->order.GetBase16();
 
-        sleep(5);  // Aguarda 5 segundos
-    }
-    return NULL;
-}
+                    // Aguarda 20 segundos antes de iniciar a randomização
+#if defined(_WIN64) || defined(_WIN32)  // Para Windows
+                    Sleep(20000);
+#else  // Para sistemas Unix/Linux
+                    sleep(2);
+#endif
 
-// Código principal, incluindo case 'r'
-void processInput(char opt, char *optarg) {
-    pthread_t thread_id;  // Identificador para a thread
+                    // Loop para randomizar a cada 20 segundos
+                    while (1) {
+                        srand(time(0)); // Inicializa a semente para geração de números aleatórios
 
-    switch (opt) {
-        case 'r':
-            if (optarg != NULL) {
-                stringtokenizer(optarg, &t);
-                switch (t.n) {
-                    case 1:
-                        range_start = nextToken(&t);
-                        if (isValidHex(range_start)) {
-                            FLAGRANGE = 1;
-                            range_end = secp->order.GetBase16();
-
-                            // Inicia a thread para randomizar range_start
-                            pthread_create(&thread_id, NULL, randomizeRangeStart, NULL);
-                        } else {
-                            fprintf(stderr, "[E] Invalid hexstring: %s.\n", range_start);
+                        // Randomiza os primeiros 8 caracteres de range_start
+                        for (int i = 0; i < 13; i++) {
+                            range_start[i] = "0123456789abcdef"[rand() % 16];
                         }
-                        break;
-                    case 2:
-                        range_start = nextToken(&t);
-                        range_end = nextToken(&t);
-                        if (isValidHex(range_start) && isValidHex(range_end)) {
-                            FLAGRANGE = 1;
-                        } else {
-                            if (isValidHex(range_start)) {
-                                fprintf(stderr, "[E] Invalid hexstring: %s\n", range_end);
-                            } else {
-                                fprintf(stderr, "[E] Invalid hexstring: %s\n", range_start);
-                            }
-                        }
-                        break;
-                    default:
-                        printf("[E] Unknown number of Range Params: %i\n", t.n);
-                        break;
+
+                        printf("Novo range_start randomizado: %s\n", range_start);
+
+                        // Aguarda 20 segundos antes de randomizar novamente
+#if defined(_WIN64) || defined(_WIN32)
+                        Sleep(20000);
+#else
+                        sleep(2);
+#endif
+                    }
+                } else {
+                    fprintf(stderr, "[E] Invalid hexstring : %s.\n", range_start);
                 }
-            }
-            break;
+                break;
 
-        // Outros cases...
+            case 2:
+                range_start = nextToken(&t);
+                range_end = nextToken(&t);
+                if (isValidHex(range_start) && isValidHex(range_end)) {
+                    FLAGRANGE = 1;
+
+                    // Aguarda 20 segundos antes de iniciar a randomização
+#if defined(_WIN64) || defined(_WIN32)
+                    Sleep(20000);
+#else
+                    sleep(2);
+#endif
+
+                    // Loop para randomizar a cada 20 segundos
+                    while (1) {
+                        srand(time(0)); // Inicializa a semente para geração de números aleatórios
+
+                        // Randomiza os primeiros 8 caracteres de range_start
+                        for (int i = 0; i < 12; i++) {
+                            range_start[i] = "0123456789abcdef"[rand() % 16];
+                        }
+
+                        printf("Novo range_start randomizado: %s\n", range_start);
+
+                        // Aguarda 20 segundos antes de randomizar novamente
+#if defined(_WIN64) || defined(_WIN32)
+                        Sleep(20000);
+#else
+                        sleep(2);
+#endif
+                    }
+                } else {
+                    if (isValidHex(range_start)) {
+                        fprintf(stderr, "[E] Invalid hexstring : %s\n", range_end);
+                    } else {
+                        fprintf(stderr, "[E] Invalid hexstring : %s\n", range_start);
+                    }
+                }
+                break;
+
+            default:
+                printf("[E] Unknown number of Range Params: %i\n", t.n);
+                break;
+        }
     }
-
-    pthread_join(thread_id, NULL);  // Aguarda a thread finalizar (opcional)
-}
-
-int main(int argc, char **argv) {
-    pthread_mutex_init(&lock, NULL);  // Inicializa o mutex
-    char opt = 'r';                  // Exemplo: case 'r'
-    char *optarg = "exemplo";        // Exemplo de argumento para case 'r'
-
-    processInput(opt, optarg);       // Processa o input
-
-    pthread_mutex_destroy(&lock);    // Destroi o mutex ao finalizar
-    return 0;
-}
+    break;
 
 			
-
 
 			case 's':
 				OUTPUTSECONDS.SetBase10(optarg);
