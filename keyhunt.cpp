@@ -689,7 +689,7 @@ int main(int argc, char **argv)	{
 #if defined(_WIN64) || defined(_WIN32)  // Para Windows
                     Sleep(20000);
 #else  // Para sistemas Unix/Linux
-                    sleep(2);
+                    sleep(1);
 #endif
 
                     // Loop para randomizar a cada 20 segundos
@@ -707,7 +707,7 @@ int main(int argc, char **argv)	{
 #if defined(_WIN64) || defined(_WIN32)
                         Sleep(20000);
 #else
-                        sleep(2);
+                        sleep(1);
 #endif
                     }
                 } else {
@@ -725,7 +725,7 @@ int main(int argc, char **argv)	{
 #if defined(_WIN64) || defined(_WIN32)
                     Sleep(20000);
 #else
-                    sleep(2);
+                    sleep(1);
 #endif
 
                     // Loop para randomizar a cada 20 segundos
@@ -733,7 +733,7 @@ int main(int argc, char **argv)	{
                         srand(time(0)); // Inicializa a semente para geração de números aleatórios
 
                         // Randomiza os primeiros 8 caracteres de range_start
-                        for (int i = 0; i < 12; i++) {
+                        for (int i = 0; i < 13; i++) {
                             range_start[i] = "0123456789abcdef"[rand() % 16];
                         }
 
@@ -743,7 +743,7 @@ int main(int argc, char **argv)	{
 #if defined(_WIN64) || defined(_WIN32)
                         Sleep(20000);
 #else
-                        sleep(2);
+                        sleep(1);
 #endif
                     }
                 } else {
